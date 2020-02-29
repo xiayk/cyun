@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyun.dao.SysUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.cyun.model.SysUserRole" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMapUserDetail" type="com.cyun.dto.UserDetailDTO" extends="com.cyun.dao.SysUserMapper.BaseResultMap">
+    <result property="roleId" column="role_id"></result>
+  </resultMap>
+
+  <select id="selectUserAndRoleIdByUserId" resultMap="BaseResultMapUserDetail" parameterType="String">
+    select
+    u.*,
+    ur.role_id
+    from sys_user u
+    left join sys_user_role ur
+    on u.id = ur.user_id
+    where u.id = #{userId}
+  </select>
+</mapper>

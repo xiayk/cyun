@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyun.dao.SysUserMapper">
+
+    <select id="selectUser" resultType="com.cyun.dto.UserDTO" parameterType="com.cyun.param.UserParam">
+        select su.`id` as id,
+        su.account as account,
+        su.user_name as userName,
+        su.phone as phone,
+        su.create_date as createDate,
+        su.update_date as updateDate,
+        su.status as status,
+        su.create_user_id as createUserId
+        from sys_user su where 1=1
+        <!--用户名-->
+        <if test="null != userName and '' != userName ">
+            and su.user_name like CONCAT('%',#{userName, jdbcType=VARCHAR}, '%')
+        </if>
+        <!--账号-->
+        <if test="null != account and '' != account ">
+            and su.account like CONCAT('%',#{account, jdbcType=VARCHAR}, '%')
+        </if>
+        <!--手机号-->
+        <if test="null != phone and '' != phone ">
+            and su.phone like CONCAT('%',#{phone, jdbcType=VARCHAR}, '%')
+        </if>
+        ORDER BY su.create_date DESC
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectCounts" resultType="java.lang.Integer" parameterType="com.cyun.param.UserParam">
+        SELECT count(su.id) from sys_user su where 1=1
+        <if test="null != userName and '' != userName ">
+            and su.user_name like CONCAT('%',#{userName, jdbcType=VARCHAR}, '%')
+        </if>
+        <!--账号-->
+        <if test="null != account and '' != account ">
+            and su.account like CONCAT('%',#{account, jdbcType=VARCHAR}, '%')
+        </if>
+        <!--手机号-->
+        <if test="null != phone and '' != phone ">
+            and su.phone like CONCAT('%',#{phone, jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+</mapper>
