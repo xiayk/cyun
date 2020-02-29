@@ -2,7 +2,7 @@ spring:
   application:
     name: service-center
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://xiayk.com:3306/db_cyun?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: xweb
     password: xweb.mysql
@@ -34,7 +34,7 @@ spring:
     time-zone: GMT+8
 server:
   port: 8087
-  servlet:
+#  servlet:
 #    context-path: /sbq
 #eureka:
 #  client:
