@@ -10,7 +10,9 @@
         su.create_date as createDate,
         su.update_date as updateDate,
         su.status as status,
-        su.create_user_id as createUserId
+        su.create_user_id as createUserId,
+        if(su.status = 0,'正常','禁用') as statusDesc,
+        if(su.account = 'admin',1,0) as optStatus
         from sys_user su where 1=1
         <!--用户名-->
         <if test="null != userName and '' != userName ">

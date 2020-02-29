@@ -147,12 +147,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResult findByPage(UserParam param) {
         List<UserDTO> userDTOS = sysUserMapper.selectUser(param);
-        for (UserDTO userDTO : userDTOS) {
-            if (StringUtils.isNotEmpty(userDTO.getStatus().toString())) {
-                userDTO.setStatusDesc(UserStatus.parse(userDTO.getStatus().toString()).getDesc());
-            }
-        }
-        return PageResult.PageResult (userDTOS,sysUserMapper.selectCounts(param));
+        return PageResult.PageResult (sysUserMapper.selectUser(param),sysUserMapper.selectCounts(param));
     }
 
     @Override

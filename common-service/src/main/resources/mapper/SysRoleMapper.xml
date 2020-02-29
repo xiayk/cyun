@@ -16,6 +16,22 @@
     <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
 
+    <resultMap id="BaseResultMapDTO" type="com.cyun.dto.RoleDTO" >
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="opt_status" property="optStatus" javaType="INTEGER" />
+    </resultMap>
+
   <resultMap id="BaseResultRole" type="com.cyun.dto.RoleDTO" extends="BaseResultMap">
   </resultMap>
 
@@ -58,9 +74,10 @@
     where r.id = #{roleId}
   </select>
 
-  <select id="listLimitRole" resultMap="BaseResultMap" parameterType="com.cyun.param.ListRoleParam">
+  <select id="listLimitRole" resultMap="BaseResultMapDTO" parameterType="com.cyun.param.ListRoleParam">
     select
-    <include refid="Role" />
+    <include refid="Role" />,
+    if(r.role_code in ('cyun-super','cyun-admin'),1,0) as opt_status
     from sys_role r
     <where>
       status != 2
@@ -89,6 +106,7 @@
         </if>
       </if>
     </where>
+    order by create_date asc
     <if test="offset != null">
       limit ${offset}, ${limit}
     </if>

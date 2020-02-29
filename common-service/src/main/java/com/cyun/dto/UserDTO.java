@@ -57,5 +57,8 @@ public class UserDTO {
      */
     private String createUserID;
 
-
+    /**
+     * 操作状态(1不能操作，0能操作)
+     */
+    private String optStatus;
 }

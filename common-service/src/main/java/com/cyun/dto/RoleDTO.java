@@ -1,6 +1,7 @@
 package com.cyun.dto;
 
 import com.cyun.model.SysRole;
+import lombok.Data;
 
 /**
  * Created RoleDTO with IDEA
@@ -9,5 +10,8 @@ import com.cyun.model.SysRole;
  * @Auther: xiayk
  * @date: 2019/11/17 下午4:09
  **/
+@Data
 public class RoleDTO extends SysRole {
+    /** 操作状态(1不能操作，0能操作) */
+    Integer optStatus;
 }
