@@ -13,5 +13,5 @@ import lombok.Data;
 @Data
 public class RoleDTO extends SysRole {
     /** 操作状态(1不能操作，0能操作) */
-    Integer optStatus;
+    public Integer optStatus;
 }

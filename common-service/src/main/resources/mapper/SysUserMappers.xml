@@ -13,7 +13,7 @@
         su.create_user_id as createUserId,
         if(su.status = 0,'正常','禁用') as statusDesc,
         if(su.account = 'admin',1,0) as optStatus
-        from sys_user su where 1=1 and status != 2
+        from sys_user su where 1=1 and su.status != 2
         <!--用户名-->
         <if test="null != userName and '' != userName ">
             and su.user_name like CONCAT('%',#{userName, jdbcType=VARCHAR}, '%')
@@ -38,7 +38,7 @@
     </select>
 
     <select id="selectCounts" resultType="java.lang.Integer" parameterType="com.cyun.param.UserParam">
-        SELECT count(su.id) from sys_user su where 1=1
+        SELECT count(su.id) from sys_user su where 1=1 and su.status != 2
         <if test="null != userName and '' != userName ">
             and su.user_name like CONCAT('%',#{userName, jdbcType=VARCHAR}, '%')
         </if>

@@ -18,5 +18,5 @@ public class MenuDTO extends SysMenu {
     /**
      * 操作状态(1不能操作，0能操作)
      */
-    private String optStatus;
+    private Integer optStatus;
 }
