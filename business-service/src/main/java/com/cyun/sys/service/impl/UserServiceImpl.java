@@ -146,8 +146,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageResult findByPage(UserParam param) {
-        List<UserDTO> userDTOS = sysUserMapper.selectUser(param);
-        return PageResult.PageResult (sysUserMapper.selectUser(param),sysUserMapper.selectCounts(param));
+        return PageResult.PageResult(sysUserMapper.selectUser(param), sysUserMapper.selectCounts(param));
     }
 
     @Override
