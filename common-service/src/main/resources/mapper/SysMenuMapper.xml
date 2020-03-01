@@ -51,7 +51,7 @@
            type,
            sort,
            (select menu_name from sys_menu where id = m.parent_id) parentName,
-           if(menu_code in ('sys-setting','sys-setting','sys-role','sys-role','sys-cyun'),1,0) as optStatus
+           if(menu_code in ('sys-setting','sys-menu','sys-role','sys-user','sys-cyun'),1,0) as optStatus
         from sys_menu m
         where status != 2
         order by update_date desc
