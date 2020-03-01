@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class UserToken {
 
-    public final static String Cashier_SessionId_Prefix = "zjkj-group:";
+    public final static String Cashier_SessionId_Prefix = "cyun-group:";
 
     /**
      * 获取登陆的 LoginAppUser
@@ -54,11 +56,22 @@ public class UserToken {
         return userDTO;
     }
 
-    /*
-     保存
+    /**
+     * 保存当前用户信息到redis
+     * 1、查询当前用户在redis中存储的数据
+     * 2、删除以前的数据
+     * 3、保存新token
      */
     public static String saveLoginUserToken(LoginUserDTO user, String tokenId) {
         StringRedisTemplate stringRedisTemplate = SpringContextHolder.getApplicationContext().getBean(StringRedisTemplate.class);
+        // 查询当前用户在redis中存储的数据
+        Set<String> keys = stringRedisTemplate.keys(Cashier_SessionId_Prefix + tokenId + ".*");
+        // 删除以前的数据
+        for (String str : keys){
+            stringRedisTemplate.delete(str);
+        }
+        // 保存新token
+        tokenId = tokenId + "." + new Date();
         String sessionKey = Cashier_SessionId_Prefix + tokenId;
         user.setToken(tokenId);
         stringRedisTemplate.opsForValue().set(sessionKey, JSON.toJSONString(user), 3, TimeUnit.DAYS);
