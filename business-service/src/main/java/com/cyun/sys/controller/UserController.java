@@ -62,6 +62,7 @@ public class UserController {
     public JSONResult<String> updateStatus(@RequestBody SaveAndUpdateUserParam param) throws Exception {
         param.setUpdateUserId(UserTokenUtils.getLoginUserId());
         userService.updateStatus(param);
+        log.info("移除"+param.getId()+"的缓存");
         UserTokenUtils.removeUserToken(param.getId());
         return HttpUtil.writeSuccessJSON();
     }
