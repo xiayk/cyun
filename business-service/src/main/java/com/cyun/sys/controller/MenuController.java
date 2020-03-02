@@ -42,6 +42,8 @@ public class MenuController {
     @ApiOperation("添加菜单")
     public JSONResult saveMenu(@RequestBody SaveMenuParam param) throws Exception{
         param.setUserId(UserTokenUtils.getLoginUserDTO().getId());
+        // 默认加上超级管理员权限
+        param.getRoleIds().add("6d94ea96a7834d41851717cdd8dc5b6f");
         menuService.saveMenu(param);
         return HttpUtil.writeSuccessJSON();
     }

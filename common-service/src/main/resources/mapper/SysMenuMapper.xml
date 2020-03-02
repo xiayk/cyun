@@ -54,7 +54,7 @@
            if(menu_code in ('sys-setting','sys-menu','sys-role','sys-user','sys-cyun'),1,0) as optStatus
         from sys_menu m
         where status != 2
-        order by optStatus desc, update_date desc
+        order by opt_status desc, update_date desc
         <if test="offset != null">
             limit ${offset}, ${limit}
         </if>
