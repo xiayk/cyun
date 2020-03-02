@@ -106,7 +106,7 @@
         </if>
       </if>
     </where>
-    order by optStatus desc, create_date asc
+    order by opt_status desc, create_date asc
     <if test="offset != null">
       limit ${offset}, ${limit}
     </if>
