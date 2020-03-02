@@ -10,7 +10,11 @@ import com.cyun.utils.token.UserTokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IDEA
@@ -43,7 +47,12 @@ public class MenuController {
     public JSONResult saveMenu(@RequestBody SaveMenuParam param) throws Exception{
         param.setUserId(UserTokenUtils.getLoginUserDTO().getId());
         // 默认加上超级管理员权限
-        param.getRoleIds().add("6d94ea96a7834d41851717cdd8dc5b6f");
+        List<String> roleIds = param.getRoleIds();
+        if (CollectionUtils.isEmpty(roleIds)){
+            roleIds = new ArrayList<>();
+        }
+        roleIds.add("6d94ea96a7834d41851717cdd8dc5b6f");
+        param.setRoleIds(roleIds);
         menuService.saveMenu(param);
         return HttpUtil.writeSuccessJSON();
     }
