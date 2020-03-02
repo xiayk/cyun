@@ -7,23 +7,23 @@ package com.cyun.enums.states;
  **/
 public enum UserStatus {
 
-    Create("0","正常"),
-    Enable("1","禁用"),
-    Delete("2","删除");
+    Create(0,"正常"),
+    Enable(1,"禁用"),
+    Delete(2,"删除");
 
-    private String value;
+    private Integer value;
     private String desc;
 
-    UserStatus(String value, String desc) {
+    UserStatus(Integer value, String desc) {
         this.value = value;
         this.desc = desc;
     }
 
-    public String getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public UserStatus setValue(String value) {
+    public UserStatus setValue(Integer value) {
         this.value = value;
         return this;
     }
@@ -41,7 +41,7 @@ public enum UserStatus {
         this.desc = desc;
     }
 
-    public static UserStatus parse(String value) {
+    public static UserStatus parse(Integer value) {
         if (null == value) {
             return null;
         }

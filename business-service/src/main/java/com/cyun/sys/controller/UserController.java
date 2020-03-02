@@ -3,6 +3,7 @@ package com.cyun.sys.controller;
 import com.alibaba.fastjson.JSON;
 import com.cyun.dto.LoginUserDTO;
 import com.cyun.dto.UserDTO;
+import com.cyun.enums.states.UserStatus;
 import com.cyun.exception.TokenException;
 import com.cyun.model.SysUserRole;
 import com.cyun.param.EditPasswordParam;
@@ -55,6 +56,9 @@ public class UserController {
     @PostMapping("/addOrUpdate")
     public JSONResult<String> addOrUpdate(@RequestBody SaveAndUpdateUserParam param) throws Exception {
         userService.addOrUpdate(param, UserTokenUtils.getLoginUserId());
+        if (param.getStatus() == UserStatus.Enable.getValue()){
+            UserTokenUtils.removeUserToken(param.getId());
+        }
         return HttpUtil.writeSuccessJSON();
     }
 
@@ -65,9 +69,6 @@ public class UserController {
         userService.updateStatus(param);
         log.info("移除"+param.getId()+"的缓存");
         UserTokenUtils.removeUserToken(param.getId());
-        if (1==1){
-            new TokenException("用户id"+param.getId());
-        }
         return HttpUtil.writeSuccessJSON();
     }
 
