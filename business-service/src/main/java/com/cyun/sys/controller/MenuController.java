@@ -67,6 +67,13 @@ public class MenuController {
     @ApiOperation("编辑菜单")
     public JSONResult editMenu(@RequestBody EditMenuParam param) throws Exception{
         param.setUpdateUserId(UserTokenUtils.getLoginUserDTO().getId());
+        // 默认加上超级管理员权限
+        List<String> roleIds = param.getRoleIds();
+        if (CollectionUtils.isEmpty(roleIds)){
+            roleIds = new ArrayList<>();
+        }
+        roleIds.add("6d94ea96a7834d41851717cdd8dc5b6f");
+        param.setRoleIds(roleIds);
         menuService.editMenu(param);
         return HttpUtil.writeSuccessJSON();
     }
