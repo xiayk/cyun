@@ -76,35 +76,38 @@ public class UserController {
 
     @ApiOperation("查询用户列表")
     @PostMapping("/list")
-    public JSONResult findByPage(@RequestBody UserParam param) {
+    public JSONResult findByPage(@RequestBody UserParam param) throws Exception {
+        LoginUserDTO loginUserDTO = UserTokenUtils.getLoginUserDTO();
+        param.setIsAdmin(loginUserDTO.getAccount().equals("admin") ? 1 : 0);
+        param.setUserId(loginUserDTO.getId());
         return HttpUtil.writeSuccessJSON(userService.findByPage(param));
     }
 
     @ApiOperation("查询我的信息")
     @PostMapping("/info/my")
-    public JSONResult findMyInfo() throws Exception{
+    public JSONResult findMyInfo() throws Exception {
         return HttpUtil.writeSuccessJSON(UserTokenUtils.getLoginUserDTO());
     }
 
     @ApiOperation("查询用户信息")
     @PostMapping("/detail/{userId}")
-    public JSONResult findUserInfo(@PathVariable("userId") String userId) throws Exception{
+    public JSONResult findUserInfo(@PathVariable("userId") String userId) throws Exception {
         return HttpUtil.writeSuccessJSON(userService.findUserDetail(userId));
     }
 
     @ApiOperation("重置密码(666666)")
     @PostMapping("/reset/{id}")
-    public JSONResult<Boolean> resetPassword (@PathVariable("id") String id) {
-        return  HttpUtil.writeSuccessJSON(userService.resetPassword(id));
+    public JSONResult<Boolean> resetPassword(@PathVariable("id") String id) {
+        return HttpUtil.writeSuccessJSON(userService.resetPassword(id));
     }
 
     @ApiOperation("锁屏密码效验(666666)")
     @PostMapping("/lock/login/{password}")
-    public JSONResult<String> lockLogin (@PathVariable("password") String password) throws Exception {
+    public JSONResult<String> lockLogin(@PathVariable("password") String password) throws Exception {
         LoginUserDTO loginUserDTO = UserTokenUtils.getLoginUserDTO();
         if (!passwordEncoder.matches(password, loginUserDTO.getPassword())) {
             throw new IllegalArgumentException("密码错误");
         }
-        return  HttpUtil.writeSuccessJSON();
+        return HttpUtil.writeSuccessJSON();
     }
 }

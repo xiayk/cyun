@@ -52,7 +52,7 @@ public interface RoleService {
      * 获取所有角色名称 ID
      * @return
      */
-    List<RoleDTO> getRoleTree();
+    List<RoleDTO> getRoleTree(Integer isAdmin);
 
     /**
      * 获取角色详情

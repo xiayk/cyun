@@ -65,13 +65,13 @@ public class MenuServiceImpl implements MenuService {
         SysRoleMenu roleMenu = new SysRoleMenu();
 
         //接收父菜单为空 设该菜单为父菜单
-        if (menu.getParentId() == null){
+        if (menu.getParentId() == null) {
             menu.setParentId("0");
         }
         roleMenu.setMenuId(menu.getId());
         sysRoleMenuMapper.delMenuByMenuId(menu.getId());
         param.getRoleIds().forEach(roleId -> {
-            if (sysRoleMenuMapper.countRoleIdAndMenuId(roleId, menu.getId()) == 0){
+            if (sysRoleMenuMapper.countRoleIdAndMenuId(roleId, menu.getId()) == 0) {
                 roleMenu.setId(UUIDFactory.newUUID());
                 roleMenu.setRoleId(roleId);
                 sysRoleMenuMapper.insert(roleMenu);
@@ -87,10 +87,11 @@ public class MenuServiceImpl implements MenuService {
 
     /**
      * 菜单是否存在
+     *
      * @param menuId
      */
-    private void isMenu(String menuId){
-        if (sysMenuMapper.selectByPrimaryKey(menuId) == null){
+    private void isMenu(String menuId) {
+        if (sysMenuMapper.selectByPrimaryKey(menuId) == null) {
             throw new IllegalArgumentException("菜单不存在");
         }
     }
@@ -99,7 +100,7 @@ public class MenuServiceImpl implements MenuService {
     public void delMenu(String menuId, String delUserId) {
         isMenu(menuId);
         //获取菜单类型0无法被删除
-        if (sysMenuMapper.selectByPrimaryKey(menuId).getType() == 0){
+        if (sysMenuMapper.selectByPrimaryKey(menuId).getType() == 0) {
             throw new IllegalArgumentException("该菜单无法被删除");
         }
         SysMenu menu = new SysMenu();
@@ -120,7 +121,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setType(2);
 
         //menu role关系表添加数据
-        if (BeanRewriteUtils.isNotNullOrEmpty(param.getRoleIds())){
+        if (BeanRewriteUtils.isNotNullOrEmpty(param.getRoleIds())) {
             param.getRoleIds().forEach(roleId -> {
                 SysRoleMenu roleMenu = new SysRoleMenu();
                 roleMenu.setId(UUIDFactory.newUUID());
@@ -141,13 +142,14 @@ public class MenuServiceImpl implements MenuService {
 
     /**
      * 判断菜单名重复
+     *
      * @param pid
      * @param menuName
      */
-    private void isRepeatMenuName(String menuId, String pid, String menuName){
+    private void isRepeatMenuName(String menuId, String pid, String menuName) {
         String id = sysMenuMapper.countMenuByNameAndPId(pid, menuName);
-        if (!StringUtils.isEmpty(id)){
-            if (id.equals(menuId)){
+        if (!StringUtils.isEmpty(id)) {
+            if (id.equals(menuId)) {
                 return;
             }
             throw new IllegalArgumentException("该目录下存在相同名称的菜单");
@@ -166,23 +168,31 @@ public class MenuServiceImpl implements MenuService {
         return parentMenu(dtoList);
     }
 
+    @Override
+    public List<MenuResult> listTreeMenuListForUser() {
+        //获取所有菜单
+        List<MenuDTO> dtoList = sysMenuMapper.listTreeMenuListForUser();
+        return parentMenu(dtoList);
+    }
+
     /**
      * 获取角色选中菜单
-     * @param treeList 所有菜单的树形
+     *
+     * @param treeList       所有菜单的树形
      * @param selectMenuList 选中的菜单
      * @return
      */
-    private List<EditMenuResult> formatSelectMenu(List<MenuDTO> treeList, List<MenuDTO> selectMenuList){
+    private List<EditMenuResult> formatSelectMenu(List<MenuDTO> treeList, List<MenuDTO> selectMenuList) {
         List<EditMenuResult> selectMenus = BeanRewriteUtils.populateList(parentMenu(treeList), new ArrayList<EditMenuResult>(), EditMenuResult.class);
-        log.info("formatSelectMenu() selectMenus={}",treeList);
-        if (selectMenuList.isEmpty()){
+        log.info("formatSelectMenu() selectMenus={}", treeList);
+        if (selectMenuList.isEmpty()) {
             return selectMenus;
         }
         selectMenus.forEach(menuDTO -> {
             log.info(menuDTO.getId());
             selectMenuList.forEach(menu -> {
                 boolean flag = false;
-                if (menu.getId().equals(menuDTO.getId())){
+                if (menu.getId().equals(menuDTO.getId())) {
                     flag = true;
                 }
                 menuDTO.setChecked(flag);
@@ -193,15 +203,16 @@ public class MenuServiceImpl implements MenuService {
 
     /**
      * 处理菜单
+     *
      * @param menuDTOList
      * @return
      */
-    private List<MenuResult> parentMenu(List<MenuDTO> menuDTOList){
+    private List<MenuResult> parentMenu(List<MenuDTO> menuDTOList) {
         List<MenuResult> list = new ArrayList<>();
 
         //获取一级菜单
         menuDTOList.forEach(menuDTO -> {
-            if ("".equals(menuDTO.getParentId()) || menuDTO.getParentId().equals("0") && menuDTO.getStatus() == 0){
+            if ("".equals(menuDTO.getParentId()) || menuDTO.getParentId().equals("0") && menuDTO.getStatus() == 0) {
                 list.add((MenuResult) BeanRewriteUtils.populate(menuDTO, new MenuResult()));
             }
         });
@@ -211,7 +222,7 @@ public class MenuServiceImpl implements MenuService {
             List<MenuResult> node = new ArrayList<>();
             menuDTOList.forEach(menuDTO -> {
                 //菜单状态为0 父菜单不为空 父菜单
-                if (menuDTO.getStatus() == 0 && BeanRewriteUtils.isNotNullOrEmpty(menuDTO.getParentId()) && menuDTO.getParentId().equals(menuResult.getId())){
+                if (menuDTO.getStatus() == 0 && BeanRewriteUtils.isNotNullOrEmpty(menuDTO.getParentId()) && menuDTO.getParentId().equals(menuResult.getId())) {
                     node.add((MenuResult) BeanRewriteUtils.populate(menuDTO, new MenuResult()));
                 }
             });

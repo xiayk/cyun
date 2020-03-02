@@ -26,6 +26,13 @@ public interface SysRoleMapper extends CommonMapper<SysRole> {
      */
     List<RoleDTO> listLimitRole(ListRoleParam param);
 
+    /**
+     * 获取对应角色
+     * @param isAdmin
+     * @return
+     */
+    List<RoleDTO> listRoleTree(@Param("isAdmin") Integer isAdmin);
+
 
     /**
      * 查看

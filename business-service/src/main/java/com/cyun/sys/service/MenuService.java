@@ -16,6 +16,7 @@ public interface MenuService {
 
     /**
      * 获取菜单
+     *
      * @param userId
      * @return
      */
@@ -23,6 +24,7 @@ public interface MenuService {
 
     /**
      * 分页获取菜单
+     *
      * @param pageParam
      * @return
      */
@@ -30,24 +32,28 @@ public interface MenuService {
 
     /**
      * 添加菜单
+     *
      * @param param
      */
     void saveMenu(SaveMenuParam param);
 
     /**
      * 编辑菜单
+     *
      * @param param
      */
     void editMenu(EditMenuParam param);
 
     /**
      * 删除菜单
+     *
      * @param menuId
      */
     void delMenu(String menuId, String delUserId);
 
     /**
      * 获取菜单详情
+     *
      * @param menuId
      * @return
      */
@@ -55,12 +61,21 @@ public interface MenuService {
 
     /**
      * 格式化所有菜单
+     *
      * @return
      */
     List<MenuResult> getTreeMenuList(String roleId);
 
     /**
+     * 新增/修改角色，显示的菜单树
+     *
+     * @return
+     */
+    List<MenuResult> listTreeMenuListForUser();
+
+    /**
      * 获取父菜单
+     *
      * @return
      */
     List<MenuDTO> getAllParentMenu();

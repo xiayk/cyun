@@ -54,7 +54,7 @@
            if(menu_code in ('sys-setting','sys-menu','sys-role','sys-user','sys-cyun'),1,0) as optStatus
         from sys_menu m
         where status != 2
-        order by update_date desc
+        order by optStatus desc, update_date desc
         <if test="offset != null">
             limit ${offset}, ${limit}
         </if>
@@ -86,5 +86,11 @@
         <if test="roleId == null or roleId == ''">
             where m.status != 2
         </if>
+    </select>
+
+    <select id="listTreeMenuListForUser" resultType="com.cyun.dto.MenuDTO">
+        select
+        <include refid="com.cyun.dao.SysRoleMenuMapper.LinkMenu" />
+        from sys_menu m where m.id not in (select id from sys_menu where parent_id = '84959945e0ce44f399d56d59a0d35240') and m.menu_code != 'sys-setting'
     </select>
 </mapper>

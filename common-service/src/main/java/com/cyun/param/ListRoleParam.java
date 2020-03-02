@@ -35,4 +35,7 @@ public class ListRoleParam extends PageParam {
 
     @ApiModelProperty(value = "角色类型", dataType = "String", required = false)
     private Integer type;
+
+    @ApiModelProperty(value = "是否是管理员(1=是，0=否)", dataType = "String", required = true, hidden = true)
+    private Integer isAdmin;
 }

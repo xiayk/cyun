@@ -1,5 +1,6 @@
 package com.cyun.sys.controller;
 
+import com.cyun.dto.LoginUserDTO;
 import com.cyun.param.*;
 import com.cyun.sys.service.RoleService;
 import com.cyun.utils.http.HttpUtil;
@@ -27,7 +28,7 @@ public class RoleController {
 
     @PostMapping("/save")
     @ApiOperation("添加角色")
-    public JSONResult saveRole(@RequestBody SaveRoleParam param) throws Exception{
+    public JSONResult saveRole(@RequestBody SaveRoleParam param) throws Exception {
         param.setUserId(UserTokenUtils.getLoginUserDTO().getId());
         roleService.saveRole(param);
         return HttpUtil.writeSuccessJSON();
@@ -35,19 +36,19 @@ public class RoleController {
 
     @PostMapping("/detail/{roleId}")
     @ApiOperation("获取角色详情")
-    public JSONResult getRoleDetail(@PathVariable("roleId") String roleId){
+    public JSONResult getRoleDetail(@PathVariable("roleId") String roleId) {
         return HttpUtil.writeSuccessJSON(roleService.getRoleDetail(roleId));
     }
 
     @PostMapping("/list")
     @ApiOperation("获取所有角色")
-    public JSONResult getAllRole(@RequestBody ListRoleParam param){
+    public JSONResult getAllRole(@RequestBody ListRoleParam param) {
         return HttpUtil.writeSuccessJSON(roleService.listRoles(param));
     }
 
     @PostMapping("/edit")
     @ApiOperation("编辑角色")
-    public JSONResult editRole(@RequestBody EditRoleParam param) throws Exception{
+    public JSONResult editRole(@RequestBody EditRoleParam param) throws Exception {
         param.setUpdateUserId(UserTokenUtils.getLoginUserDTO().getId());
         roleService.editRole(param);
         return HttpUtil.writeSuccessJSON();
@@ -55,21 +56,22 @@ public class RoleController {
 
     @PostMapping("/save/menu")
     @ApiOperation("角色赋菜单")
-    public JSONResult saveMenuToRole(@RequestBody SaveMenuToRoleParam param){
+    public JSONResult saveMenuToRole(@RequestBody SaveMenuToRoleParam param) {
         roleService.SaveMenuToRole(param);
         return HttpUtil.writeSuccessJSON();
     }
 
     @PostMapping("/del/{roleId}")
     @ApiOperation("删除角色")
-    public JSONResult delRole(@PathVariable String roleId) throws Exception{
+    public JSONResult delRole(@PathVariable String roleId) throws Exception {
         roleService.delRole(roleId, UserTokenUtils.getLoginUserDTO().getId());
         return HttpUtil.writeSuccessJSON();
     }
 
     @PostMapping("/tree")
     @ApiOperation("角色列表")
-    public JSONResult getRoleTree(){
-        return HttpUtil.writeSuccessJSON(roleService.getRoleTree());
+    public JSONResult getRoleTree() throws Exception {
+        LoginUserDTO loginUserDTO = UserTokenUtils.getLoginUserDTO();
+        return HttpUtil.writeSuccessJSON(roleService.getRoleTree(loginUserDTO.getAccount().equals("admin") ? 1 : 0));
     }
 }

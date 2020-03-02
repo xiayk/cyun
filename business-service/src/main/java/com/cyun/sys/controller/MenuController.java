@@ -82,7 +82,7 @@ public class MenuController {
     @PostMapping("/tree")
     @ApiOperation("获取树形菜单")
     public JSONResult getAllMenuList(){
-        return HttpUtil.writeSuccessJSON(menuService.getTreeMenuList(null));
+        return HttpUtil.writeSuccessJSON(menuService.listTreeMenuListForUser());
     }
 
     @PostMapping("/tree/{roleId}")

@@ -127,8 +127,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDTO> getRoleTree() {
-        return sysRoleMapper.listLimitRole(null);
+    public List<RoleDTO> getRoleTree(Integer isAdmin) {
+        return sysRoleMapper.listRoleTree(isAdmin);
     }
 
     @Override

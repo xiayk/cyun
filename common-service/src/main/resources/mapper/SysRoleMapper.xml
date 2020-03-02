@@ -106,7 +106,7 @@
         </if>
       </if>
     </where>
-    order by create_date asc
+    order by optStatus desc, create_date asc
     <if test="offset != null">
       limit ${offset}, ${limit}
     </if>
@@ -148,5 +148,17 @@
         </if>
       </if>
     </where>
+  </select>
+
+  <select id="listRoleTree" resultMap="BaseResultMapDTO" parameterType="java.lang.Integer">
+      select
+      <include refid="Role" />
+      from sys_role r where 1 = 1
+      <if test="isAdmin == 0">
+          and r.role_code not in ('cyun-super','cyun-admin')
+      </if>
+      <if test="isAdmin == 1">
+          and r.role_code != 'cyun-super'
+      </if>
   </select>
 </mapper>

@@ -71,7 +71,7 @@ public class UserToken {
             stringRedisTemplate.delete(str);
         }
         // 保存新token
-        tokenId = tokenId + "." + new Date();
+        tokenId = tokenId + "." + System.currentTimeMillis();
         String sessionKey = Cashier_SessionId_Prefix + tokenId;
         user.setToken(tokenId);
         stringRedisTemplate.opsForValue().set(sessionKey, JSON.toJSONString(user), 3, TimeUnit.DAYS);

@@ -53,4 +53,7 @@ public interface SysMenuMapper extends CommonMapper<SysMenu> {
      * @return
      */
     List<MenuDTO> listTreeMenu(String roleId);
+
+
+    List<MenuDTO> listTreeMenuListForUser();
 }
