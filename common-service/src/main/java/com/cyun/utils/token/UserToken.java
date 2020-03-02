@@ -76,7 +76,6 @@ public class UserToken {
         user.setToken(tokenId);
         stringRedisTemplate.opsForValue().set(sessionKey, JSON.toJSONString(user), 3, TimeUnit.DAYS);
         return tokenId;
-
     }
 
     /*
@@ -107,5 +106,20 @@ public class UserToken {
         String newSessionKey = Cashier_SessionId_Prefix + newToken;
         stringRedisTemplate.renameIfAbsent(sessionKey, newSessionKey);
         return newToken;
+    }
+
+    /**
+     * 清空token
+     * @param tokenId
+     * @return
+     */
+    public static void removeLoginUserToken(String tokenId) {
+        StringRedisTemplate stringRedisTemplate = SpringContextHolder.getApplicationContext().getBean(StringRedisTemplate.class);
+        // 查询当前用户在redis中存储的数据
+        Set<String> keys = stringRedisTemplate.keys(Cashier_SessionId_Prefix + tokenId + ".*");
+        // 删除以前的数据
+        for (String str : keys){
+            stringRedisTemplate.delete(str);
+        }
     }
 }

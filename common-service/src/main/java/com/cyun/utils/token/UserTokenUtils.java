@@ -29,4 +29,8 @@ public class UserTokenUtils {
     public static String getLoginUserId() throws Exception {
         return UserToken.getLoginUserDTO(RequestHolder.getRequest(), null).getId();
     }
+
+    public static void removeUserToken(String tokenId) {
+        UserToken.removeLoginUserToken(tokenId);
+    }
 }

@@ -37,7 +37,7 @@ public class ExceptionHandlerAdvice {
 
     /**
      * token 无效
-     * 410
+     * 401
      * @param exception
      * @return
      */
@@ -45,7 +45,7 @@ public class ExceptionHandlerAdvice {
     @Order(2)
     public JSONResult<String> tokenException(TokenException exception) {
         log.error(exception.getMessage(), exception);
-        return HttpUtil.writeJSON("", exception.getMessage(), HttpStatus.GONE.value());
+        return HttpUtil.writeJSON("", exception.getMessage(), 401);
     }
 
     /**

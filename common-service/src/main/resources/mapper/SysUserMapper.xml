@@ -49,7 +49,7 @@
     <sql id="selectCondition">
         <!--判断是否是超级管理员权限查询，是查询所有，否则查询管理员创建的用户-->
         <if test="isAdmin == 0">
-            and (su.id in (select id from sys_user where parent_id = #{userId}) or su.id = #{userId})
+            and (su.id in (select id from sys_user where parent_id = #{userId}))
         </if>
         <if test="null != userName and '' != userName ">
             and su.user_name like CONCAT('%',#{userName, jdbcType=VARCHAR}, '%')

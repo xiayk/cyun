@@ -43,6 +43,13 @@ public class UserController {
         return HttpUtil.writeJSONObject(token);
     }
 
+    @ApiOperation("退出登陆")
+    @GetMapping("/quit")
+    public JSONResult<String> outLogin() throws Exception {
+        UserTokenUtils.removeUserToken(UserTokenUtils.getLoginUserId());
+        return HttpUtil.writeSuccessJSON();
+    }
+
     @ApiOperation("新增/修改用户/")
     @PostMapping("/addOrUpdate")
     public JSONResult<String> addOrUpdate(@RequestBody SaveAndUpdateUserParam param) throws Exception {
@@ -55,6 +62,7 @@ public class UserController {
     public JSONResult<String> updateStatus(@RequestBody SaveAndUpdateUserParam param) throws Exception {
         param.setUpdateUserId(UserTokenUtils.getLoginUserId());
         userService.updateStatus(param);
+        UserTokenUtils.removeUserToken(param.getId());
         return HttpUtil.writeSuccessJSON();
     }
 
