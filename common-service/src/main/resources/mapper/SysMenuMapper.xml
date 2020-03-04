@@ -91,6 +91,6 @@
     <select id="listTreeMenuListForUser" resultType="com.cyun.dto.MenuDTO">
         select
         <include refid="com.cyun.dao.SysRoleMenuMapper.LinkMenu" />
-        from sys_menu m where m.status != 2 and m.id not in (select id from sys_menu where parent_id = '84959945e0ce44f399d56d59a0d35240') and m.menu_code != 'sys-setting'
+        from sys_menu m where m.status = 0 and m.id not in (select id from sys_menu where parent_id = '84959945e0ce44f399d56d59a0d35240') and m.menu_code != 'sys-setting'
     </select>
 </mapper>
