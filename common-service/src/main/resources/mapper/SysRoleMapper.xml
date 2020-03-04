@@ -153,7 +153,7 @@
   <select id="listRoleTree" resultMap="BaseResultMapDTO" parameterType="java.lang.Integer">
       select
       <include refid="Role" />
-      from sys_role r where 1 = 1
+      from sys_role r where 1 = 1 and r.status != 2
       <if test="isAdmin == 0">
           and r.role_code not in ('cyun-super','cyun-admin')
       </if>

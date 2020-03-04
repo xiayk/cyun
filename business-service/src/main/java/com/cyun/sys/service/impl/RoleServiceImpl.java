@@ -133,6 +133,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDTO getRoleDetail(String roleId) {
-        return sysRoleMapper.selectRoleDetail(roleId);
+        RoleDTO roleDTO = sysRoleMapper.selectRoleDetail(roleId);
+        // 查询角色对应菜单id
+        roleDTO.setMenuIds(sysRoleMenuMapper.lisMenuByRoleId(roleId));
+        return roleDTO;
     }
 }

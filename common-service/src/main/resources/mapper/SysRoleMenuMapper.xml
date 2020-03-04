@@ -67,4 +67,12 @@
         LEFT JOIN sys_role_menu rm ON rm.menu_id = m.id
         where m.status != 2 and m.id = #{menuId}
     </select>
+
+    <select id="lisMenuByRoleId" resultType="java.lang.String" parameterType="java.lang.String">
+        select
+        m.id
+        from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id
+        where rm.role_id = #{roleId} and status != 2 order by m.sort asc
+    </select>
 </mapper>
