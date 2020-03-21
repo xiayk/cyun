@@ -53,7 +53,7 @@ public class RoleServiceImpl implements RoleService {
                 //获取菜单对象
                 MenuDTO menuDTO = sysMenuMapper.findMenuById(menuId);
                 //判断是否为父菜单
-                if (!StringUtil.isEmpty(menuDTO.getParentId()) && !"0".equals(menuDTO.getParentId())){
+                if (!StringUtil.isEmpty(menuDTO.getParentId()) && !"0".equals(menuDTO.getParentId())) {
                     SysRoleMenu roleMenu = new SysRoleMenu();
                     roleMenu.setId(UUIDFactory.newUUID());
                     roleMenu.setRoleId(role.getId());
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
                     sysRoleMenuMapper.insert(roleMenu);
 
                     //关系表中获取父菜单是否添加
-                    if (sysRoleMenuMapper.countRoleIdAndMenuId(roleMenu.getRoleId(), menuDTO.getParentId()) <= 0){
+                    if (sysRoleMenuMapper.countRoleIdAndMenuId(roleMenu.getRoleId(), menuDTO.getParentId()) <= 0) {
                         roleMenu.setId(UUIDFactory.newUUID());
                         roleMenu.setMenuId(menuDTO.getParentId());
                         sysRoleMenuMapper.insert(roleMenu);
@@ -107,7 +107,7 @@ public class RoleServiceImpl implements RoleService {
         role.setUpdateUserId(param.getUpdateUserId());
         role.setUpdateDate(new Date());
         //删除原菜单
-        sysRoleMenuMapper.delMenuByRoleId(param.getRoleId());
+        sysRoleMenuMapper.delMenuByRoleId(param.getRoleId(), param.getDefaultMenuIdStr());
         //重新给菜单
         param.getMenuIds().forEach(menuId -> {
             SysRoleMenu roleMenu = new SysRoleMenu();

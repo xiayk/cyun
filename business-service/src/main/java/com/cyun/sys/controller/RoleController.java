@@ -9,6 +9,7 @@ import com.cyun.utils.token.UserTokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/role")
 @Api(value = "角色管理", tags = {"角色管理"})
 public class RoleController {
+
+    @Value("${sys.param.default_menu_id}")
+    private String defaultMenuIdStr;
 
     @Autowired
     private RoleService roleService;
@@ -50,6 +54,7 @@ public class RoleController {
     @ApiOperation("编辑角色")
     public JSONResult editRole(@RequestBody EditRoleParam param) throws Exception {
         param.setUpdateUserId(UserTokenUtils.getLoginUserDTO().getId());
+        param.setDefaultMenuIdStr(defaultMenuIdStr);
         roleService.editRole(param);
         return HttpUtil.writeSuccessJSON();
     }

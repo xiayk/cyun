@@ -72,11 +72,12 @@ public class UserToken {
     public static String saveLoginUserToken(LoginUserDTO user, String tokenId) {
         StringRedisTemplate stringRedisTemplate = SpringContextHolder.getApplicationContext().getBean(StringRedisTemplate.class);
         // 查询当前用户在redis中存储的数据
-        Set<String> keys = stringRedisTemplate.keys(Cashier_SessionId_Prefix + tokenId + ".*");
-        // 删除以前的数据
-        for (String str : keys){
-            stringRedisTemplate.delete(str);
-        }
+        // TODO 正式放开
+//        Set<String> keys = stringRedisTemplate.keys(Cashier_SessionId_Prefix + tokenId + ".*");
+//        // 删除以前的数据
+//        for (String str : keys){
+//            stringRedisTemplate.delete(str);
+//        }
         // 保存新token
         tokenId = tokenId + "." + System.currentTimeMillis();
         String sessionKey = Cashier_SessionId_Prefix + tokenId;

@@ -51,8 +51,8 @@ public interface SysRoleMenuMapper extends CommonMapper<SysRoleMenu> {
      * @param roleId
      */
     @Delete("delete from sys_role_menu where role_id = #{roleId} and menu_id not in " +
-            "('84959945e0ce44f399d56d59a0d35240','50e054bda83c4d46ac8a3e9dc94b170a','2c48be2373174c57aec7eaad9f1f36f9','df5bd377984d4e8d90cf5c75e170e7a7')")
-    void delMenuByRoleId(@Param("roleId") String roleId);
+            "(${defaultMenuIdStr})")
+    void delMenuByRoleId(@Param("roleId") String roleId, @Param("defaultMenuIdStr") String defaultMenuIdStr);
 
     @Delete("delete from sys_role_menu where menu_id = #{menuId}")
     void delMenuByMenuId(@Param("menuId") String menuId);

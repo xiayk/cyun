@@ -19,4 +19,7 @@ public class EditRoleParam extends SaveRoleParam {
     private String roleId;
 
     private String updateUserId;
+
+    @ApiModelProperty(value = "默认菜单ids", dataType = "String", hidden = true)
+    private String defaultMenuIdStr;
 }
