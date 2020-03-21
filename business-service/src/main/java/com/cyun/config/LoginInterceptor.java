@@ -2,6 +2,7 @@ package com.cyun.config;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,10 +15,13 @@ import java.util.Map;
 
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
+
     //在请求处理之前进行调用（Controller方法调用之前
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
         String token = httpServletRequest.getHeader("token");
+        // TODO 本地测试使用，不能提交上去，需注释掉
+//        token = StringUtils.isEmpty(token) ? "sys_admin_test_token.1584760461693" : token;
         if (StringUtils.isEmpty(token)) {
             token = (String) httpServletRequest.getParameter("token");
             if (StringUtils.isEmpty(token)) {

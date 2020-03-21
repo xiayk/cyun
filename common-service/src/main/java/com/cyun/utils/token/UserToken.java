@@ -9,6 +9,7 @@ import com.cyun.utils.bean.BeanRewriteUtils;
 import com.cyun.utils.spring.SpringContextHolder;
 import com.cyun.utils.spring.UUIDFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 
@@ -25,6 +26,10 @@ public class UserToken {
 
     public final static String Cashier_SessionId_Prefix = "cyun-group:";
 
+    @Value("${sys.param.test_token}")
+    private String adminTestToken;
+
+
     /**
      * 获取登陆的 LoginAppUser
      *
@@ -33,6 +38,8 @@ public class UserToken {
     @SuppressWarnings("rawtypes")
     public static LoginUserDTO getLoginUserDTO(HttpServletRequest request, Long defaultUserId) throws Exception {
         String token = request.getHeader("token");
+        // TODO 本地测试使用，不能提交上去，需注释掉
+//        token = StringUtils.isEmpty(token) ? "sys_admin_test_token.1584760461693" : token;
         if (StringUtils.isEmpty(token)) {
             token = (String) request.getParameter("token");
             if (StringUtils.isEmpty(token) && BeanRewriteUtils.isNotNullOrEmpty(defaultUserId)) {
