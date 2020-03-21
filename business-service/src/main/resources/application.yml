@@ -69,3 +69,9 @@ mybatis:
 #minProgram:
 #  appId: wx1cd8206018484614
 #  secret: 929e01f3e451c7fc5aa6f0e63f955604
+
+# 系统参数设置
+sys:
+  param:
+    test_token: sys_admin_test_token.1584760461693
+

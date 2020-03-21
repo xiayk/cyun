@@ -159,13 +159,11 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuResult> getTreeMenuList(String roleId) {
         //获取所有菜单
-        List<MenuDTO> dtoList = sysMenuMapper.listTreeMenu(roleId);
-//
-//        if (StringUtils.isEmpty(roleId)){
-//            return formatSelectMenu(dtoList, null);
-//        }
-//        return formatSelectMenu(dtoList, sysMenuMapper.listTreeMenu(roleId));
-        return parentMenu(dtoList);
+        List<MenuDTO> allMenus = sysMenuMapper.listTreeMenuListForUser();
+        //获取所有菜单
+        List<String> myMenuIds = sysRoleMenuMapper.listMyMenuIdsByUserId(roleId);
+
+        return parentMenu(formatMenuIsChecked(allMenus,myMenuIds));
     }
 
     @Override
@@ -173,6 +171,25 @@ public class MenuServiceImpl implements MenuService {
         //获取所有菜单
         List<MenuDTO> dtoList = sysMenuMapper.listTreeMenuListForUser();
         return parentMenu(dtoList);
+    }
+
+    /**
+     * pfhe
+     * 标记菜单是否是改角色拥有的
+     * @param allMenus
+     * @param myMenuIds
+     * @return
+     */
+    public List<MenuDTO> formatMenuIsChecked(List<MenuDTO> allMenus, List<String> myMenuIds){
+        if (myMenuIds.isEmpty()){
+            return allMenus;
+        }
+        allMenus.forEach(allMenu -> {
+            if (myMenuIds.contains(allMenu.getId())){
+                allMenu.setChecked(true);
+            }
+        });
+        return allMenus;
     }
 
     /**
