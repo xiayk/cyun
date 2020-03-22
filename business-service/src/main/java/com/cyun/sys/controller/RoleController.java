@@ -77,6 +77,7 @@ public class RoleController {
     @ApiOperation("角色列表")
     public JSONResult getRoleTree() throws Exception {
         LoginUserDTO loginUserDTO = UserTokenUtils.getLoginUserDTO();
-        return HttpUtil.writeSuccessJSON(roleService.getRoleTree(loginUserDTO.getAccount().equals("admin") ? 1 : 0));
+        // TODO 优化点
+        return HttpUtil.writeSuccessJSON(roleService.getRoleTree(loginUserDTO.getAccount().contains("admin0") ? 1 : 0));
     }
 }
