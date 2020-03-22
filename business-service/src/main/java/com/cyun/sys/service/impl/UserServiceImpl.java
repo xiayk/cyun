@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
     public Boolean resetPassword(String id) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(id);
         Preconditions.checkArgument(null != sysUser, "帐号信息不存在");
-        if (sysUser.getStatus().toString().equals(UserStatus.Create.getValue())) {
+        if (sysUser.getStatus() == UserStatus.Create.getValue()) {
             sysUser.setPassword(passwordEncoder.encode(pwd));
         } else {
             throw new IllegalArgumentException("该用户已被禁用，不能重置密码");
