@@ -78,6 +78,6 @@ public class RoleController {
     public JSONResult getRoleTree() throws Exception {
         LoginUserDTO loginUserDTO = UserTokenUtils.getLoginUserDTO();
         // TODO 优化点
-        return HttpUtil.writeSuccessJSON(roleService.getRoleTree(loginUserDTO.getAccount().contains("admin0") ? 1 : 0));
+        return HttpUtil.writeSuccessJSON(roleService.getRoleTree("admin0".contains(loginUserDTO.getAccount()) ? 1 : 0));
     }
 }
