@@ -164,8 +164,7 @@ public class UserToken {
                 .withSubject(user.getAccount())
                 .withKeyId(user.getId())
                 .withIssuer(user.getParentId())
-                .withClaim("uid", user.getId())
-                .withClaim("account", user.getAccount())
+                .withClaim("time", System.currentTimeMillis())
                 //.withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))  //JWT 配置过期时间的正确姿势
                 .sign(algorithm);
         //Redis缓存JWT
