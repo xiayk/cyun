@@ -142,14 +142,16 @@ public class UserToken {
     public static void removeLoginUserToken(String tokenId) {
         StringRedisTemplate stringRedisTemplate = SpringContextHolder.getApplicationContext().getBean(StringRedisTemplate.class);
         // 查询当前用户在redis中存储的数据
-        Set<String> keys = stringRedisTemplate.keys(Cashier_SessionId_Prefix + tokenId + ".*");
-        // 删除以前的数据
-        for (String str : keys){
-            stringRedisTemplate.delete(str);
-        }
+//        Set<String> keys = stringRedisTemplate.keys(Cashier_SessionId_Prefix + tokenId + ".*");
+//        // 删除以前的数据
+//        for (String str : keys){
+//            stringRedisTemplate.delete(str);
+//        }
+
+        stringRedisTemplate.delete(TOKEN_AUTH + getJwtIdByToken(tokenId));
     }
 
-    private static final String TOKEN_AUTH = "CYUN-AUTH-";
+    private static final String TOKEN_AUTH = "CYUN-AUTH:";
 
     /**
      * 生成签名
@@ -186,6 +188,14 @@ public class UserToken {
                     .build();
             //3 . 验证token
             DecodedJWT jwt = verifier.verify(redisToken);
+            try {
+                String a = stringRedisTemplate.opsForValue().get(TOKEN_AUTH + getJwtIdByToken(token));
+                if (a == null) {
+                    throw new TokenException("登录过期, 请重新登录");
+                }
+            }catch (Exception e){
+                throw new TokenException("登录过期, 请重新登录");
+            }
             //4 . Redis缓存JWT续期
             stringRedisTemplate.opsForValue().set(TOKEN_AUTH + getJwtIdByToken(token), redisToken, EXPIRE_TIME, TimeUnit.SECONDS);
         } catch (Exception e) { //捕捉到任何异常都视为校验失败
