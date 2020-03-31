@@ -166,6 +166,7 @@ public class UserToken {
                 .withSubject(user.getAccount())
                 .withKeyId(user.getId())
                 .withIssuer(user.getParentId())
+                .withClaim("password", user.getPassword())
                 .withClaim("time", System.currentTimeMillis())
                 //.withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))  //JWT 配置过期时间的正确姿势
                 .sign(algorithm);
@@ -190,7 +191,7 @@ public class UserToken {
             DecodedJWT jwt = verifier.verify(redisToken);
             try {
                 String a = stringRedisTemplate.opsForValue().get(TOKEN_AUTH + getJwtIdByToken(token));
-                if (a == null) {
+                if (a == null || !token.equals(a)) {
                     throw new TokenException("登录过期, 请重新登录");
                 }
             }catch (Exception e){
@@ -220,6 +221,7 @@ public class UserToken {
             user.setAccount(JWT.decode(token).getSubject());
             user.setId(JWT.decode(token).getKeyId());
             user.setParentId(JWT.decode(token).getIssuer());
+            user.setPassword(JWT.decode(token).getClaim("password").asString());
             return user;
         }catch(Exception ex){
             ex.printStackTrace();

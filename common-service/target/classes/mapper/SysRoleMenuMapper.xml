@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyun.dao.SysRoleMenuMapper">
+    <resultMap id="BaseResultMap" type="com.cyun.model.SysRoleMenu">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="role_id" property="roleId" jdbcType="VARCHAR"/>
+        <result column="menu_id" property="menuId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap1" type="com.cyun.dto.MenuDetailDTO" extends="com.cyun.dao.SysMenuMapper.BaseResultMap">
+        <result column="parentName" property="parentName" />
+        <collection property="roleIds" ofType="String">
+            <constructor>
+                <arg column="roleId"/>
+            </constructor>
+        </collection>
+    </resultMap>
+
+
+
+    <sql id="LinkMenu">
+        m.parent_id parentId,
+        m.update_user_id updateUserId,
+        m.user_id userId,
+        m.update_date updateDate,
+        m.type,
+        m.status,
+        m.sort,
+        m.menu_url menuUrl,
+        m.menu_ico menuIco,
+        m.menu_name menuName,
+        m.create_date createDate,
+        m.menu_code menuCode,
+        m.id
+    </sql>
+
+    <select id="listMyMenu" resultType="com.cyun.dto.MenuDTO" parameterType="java.lang.String">
+        select
+        <include refid="LinkMenu"/>
+        from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id
+        left join sys_user_role ur on rm.role_id = ur.role_id
+        left join sys_role r on r.id = rm.role_id
+        where ur.user_id = #{userId} and m.status = 0 and r.status = 0 order by m.sort asc
+    </select>
+
+    <select id="selectMenuDetailById" resultMap="BaseResultMap1" parameterType="String">
+        select
+        m.parent_id,
+        m.update_user_id,
+        m.user_id,
+        m.update_date,
+        m.type,
+        m.status,
+        m.sort,
+        m.menu_url,
+        m.menu_ico,
+        m.menu_name,
+        m.create_date,
+        m.menu_code,
+        m.id,
+        (select menu_name from sys_menu where id = m.parent_id) parentName,
+        rm.role_id roleId
+        from sys_menu m
+        LEFT JOIN sys_role_menu rm ON rm.menu_id = m.id
+        where m.status != 2 and m.id = #{menuId}
+    </select>
+
+    <select id="lisMenuByRoleId" resultType="java.lang.String" parameterType="java.lang.String">
+        select
+        m.id
+        from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id
+        where rm.role_id = #{roleId} and status = 0 order by m.sort asc
+    </select>
+</mapper>

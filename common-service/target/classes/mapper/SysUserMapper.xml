@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyun.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.cyun.model.SysUser" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="last_date" property="lastDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <select id="selectUser" resultType="com.cyun.dto.UserDTO" parameterType="com.cyun.param.UserParam">
+        select su.`id` as id,
+        su.account as account,
+        su.user_name as userName,
+        su.phone as phone,
+        su.create_date as createDate,
+        su.update_date as updateDate,
+        su.status as status,
+        su.create_user_id as createUserId,
+        if(su.status = 0,'正常','禁用') as statusDesc,
+        if(su.account = 'admin',1,0) as optStatus
+        from sys_user su where 1=1 and su.status != 2
+        <include refid="selectCondition"></include>
+        ORDER BY optStatus desc, su.create_date DESC
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectCounts" resultType="java.lang.Integer" parameterType="com.cyun.param.UserParam">
+        SELECT count(su.id) from sys_user su where 1=1 and su.status != 2
+        <include refid="selectCondition"></include>
+    </select>
+
+    <sql id="selectCondition">
+        <!--判断是否是超级管理员权限查询，是查询所有，否则查询管理员创建的用户-->
+        <if test="isAdmin == 0">
+            and (su.id in (select id from sys_user where parent_id = #{userId}))
+        </if>
+        <if test="null != userName and '' != userName ">
+            and su.user_name like CONCAT('%',#{userName, jdbcType=VARCHAR}, '%')
+        </if>
+        <!--账号-->
+        <if test="null != account and '' != account ">
+            and su.account like CONCAT('%',#{account, jdbcType=VARCHAR}, '%')
+        </if>
+        <!--手机号-->
+        <if test="null != phone and '' != phone ">
+            and su.phone like CONCAT('%',#{phone, jdbcType=VARCHAR}, '%')
+        </if>
+    </sql>
+</mapper>
