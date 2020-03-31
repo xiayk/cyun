@@ -28,7 +28,8 @@ public class UserTokenUtils {
     }
 
     public static String getLoginUserId() throws Exception {
-        return UserToken.getLoginUserDTO(RequestHolder.getRequest(), null).getId();
+        //return UserToken.getLoginUserDTO(RequestHolder.getRequest(), null).getId();
+        return UserToken.getJwtIdByToken(RequestHolder.getRequest()).getId();
     }
 
     public static String getToken(LoginUserDTO user){
