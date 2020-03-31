@@ -1,5 +1,6 @@
 package com.cyun.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ public class LoginUserDTO {
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**
@@ -37,11 +39,13 @@ public class LoginUserDTO {
      * 创建时间
 
      */
+    @JsonIgnore
     private Date createDate;
 
     /**
      * 修改时间
      */
+    @JsonIgnore
     private Date updateDate;
 
     /**
@@ -57,6 +61,7 @@ public class LoginUserDTO {
     /**
      * 父id
      */
+    @JsonIgnore
     private String parentId;
 
     /**

@@ -1,6 +1,7 @@
 package com.cyun.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cyun.utils.token.UserTokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,10 @@ public class LoginInterceptor implements HandlerInterceptor {
                 return false;
             }
         }
+
+        //验证token token续期
+        UserTokenUtils.verityToken(token);
+
         return true;
     }
 }

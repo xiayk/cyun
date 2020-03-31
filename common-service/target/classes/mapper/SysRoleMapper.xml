@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyun.dao.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.cyun.model.SysRole" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+
+    <resultMap id="BaseResultMapDTO" type="com.cyun.dto.RoleDTO" >
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="opt_status" property="optStatus" javaType="INTEGER" />
+    </resultMap>
+
+  <resultMap id="BaseResultRole" type="com.cyun.dto.RoleDTO" extends="BaseResultMap">
+  </resultMap>
+
+  <resultMap id="BaseResultRoleDetail" type="com.cyun.dto.RoleDetailDTO" extends="BaseResultMap">
+    <collection property="menuIds" ofType="String">
+      <constructor>
+        <arg column="menuId"/>
+      </constructor>
+    </collection>
+  </resultMap>
+
+  <sql id="LinkRole">
+    r.id id,
+    r.role_name roleName,
+    r.role_code roleCode,
+    r.create_date createDate,
+    r.user_id userId,
+    r.update_date updateDate,
+    r.update_user_id updateUserId,
+    r.status,
+    r.type
+  </sql>
+
+  <sql id="Role">
+    r.id,
+    r.role_name,
+    r.role_code,
+    r.create_date,
+    r.user_id,
+    r.update_date,
+    r.update_user_id,
+    r.status,
+    r.type
+  </sql>
+
+  <select id="selectRoleDetail" parameterType="String" resultMap="BaseResultRole">
+    select
+    <include refid="Role" />
+    from sys_role r
+    where r.id = #{roleId}
+  </select>
+
+  <select id="listLimitRole" resultMap="BaseResultMapDTO" parameterType="com.cyun.param.ListRoleParam">
+    select
+    <include refid="Role" />,
+    if(r.role_code in ('cyun-super','cyun-admin'),1,0) as opt_status
+    from sys_role r
+    <where>
+      status != 2
+      <if test="roleId != null">
+        and id = #{roleId}
+      </if>
+      <if test="roleName != null">
+        and role_name = #{roleName}
+      </if>
+      <if test="roleCode != null">
+        and role_code = #{roleCode}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="type != null">
+        and type = #{type}
+      </if>
+      <if test="createDate != null">
+        and create_date BETWEEN  #{createDate}
+        <if test="createDate1 != null">
+          AND #{createDate1}
+        </if>
+        <if test="createDate1 == null">
+          AND now()
+        </if>
+      </if>
+    </where>
+    order by opt_status desc, create_date asc
+    <if test="offset != null">
+      limit ${offset}, ${limit}
+    </if>
+    <if test="offset == null and limit != null">
+      limit ${limit}
+    </if>
+    <if test="offset == null and limit == null">
+      limit 999
+    </if>
+  </select>
+
+  <select id="countAllRoles" resultType="Integer" parameterType="com.cyun.param.ListRoleParam">
+    select count(*)
+    from sys_role
+    <where>
+      status != 2
+      <if test="roleId != null">
+        and id = #{roleId}
+      </if>
+      <if test="roleName != null">
+        and role_name = #{roleName}
+      </if>
+      <if test="roleCode != null">
+        and role_code = #{roleCode}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="type != null">
+        and type = #{type}
+      </if>
+      <if test="createDate != null">
+        and create_date BETWEEN  #{createDate}
+        <if test="createDate1 != null">
+          AND #{createDate1}
+        </if>
+        <if test="createDate1 == null">
+          AND NOW()
+        </if>
+      </if>
+    </where>
+  </select>
+
+  <select id="listRoleTree" resultMap="BaseResultMapDTO" parameterType="java.lang.Integer">
+      select
+      <include refid="Role" />
+      from sys_role r where 1 = 1 and r.status = 0
+      <if test="isAdmin == 0">
+          and r.role_code not in ('cyun-super','cyun-admin')
+      </if>
+      <if test="isAdmin == 1">
+          and r.role_code != 'cyun-super'
+      </if>
+  </select>
+</mapper>

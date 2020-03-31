@@ -27,11 +27,10 @@ public class FileController {
     @ApiOperation("创建活动")
     @ApiImplicitParam(name = "name", value = "姓名", dataType = "string", required = true)
     public JSONResult<List<FileInfo>> listImage(String name) throws Exception {
-        LoginUserDTO loginUser = UserTokenUtils.getLoginUserDTO();
-        if (loginUser.getStatus().equals(0)){
-            return HttpUtil.writeSuccessJSON();
-        }
-        return HttpUtil.writeJSONObject(fileService.listImage());
+//        LoginUserDTO loginUser = UserTokenUtils.getLoginUserDTO();
+//        if (loginUser.getStatus().equals(0)){
+//            return HttpUtil.writeSuccessJSON();
+//        }
+        return HttpUtil.writeJSONObject("111");
     }
-
 }

@@ -1,10 +1,16 @@
 package com.cyun.utils.token;
 
 import com.alibaba.fastjson.JSON;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cyun.dto.LoginUserDTO;
 import com.cyun.exception.BadRequestException;
 import com.cyun.exception.TokenException;
 import com.cyun.exception.TokenUndefinedException;
+import com.cyun.model.SysUser;
 import com.cyun.utils.bean.BeanRewriteUtils;
 import com.cyun.utils.spring.SpringContextHolder;
 import com.cyun.utils.spring.UUIDFactory;
@@ -15,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +32,17 @@ import java.util.concurrent.TimeUnit;
 public class UserToken {
 
     public final static String Cashier_SessionId_Prefix = "cyun-group:";
+
+    /**
+     * 过期时间为一天
+     * TODO 正式上线更换为15分钟
+     */
+    private static final long EXPIRE_TIME = 24*60*60*1000;
+
+    /**
+     * token私钥
+     */
+    private static final String TOKEN_SECRET = "cyun-token-123456";
 
     @Value("${sys.param.test_token}")
     private String adminTestToken;
@@ -129,5 +147,74 @@ public class UserToken {
         for (String str : keys){
             stringRedisTemplate.delete(str);
         }
+    }
+
+    private static final String TOKEN_AUTH = "CYUN-AUTH-";
+
+    /**
+     * 生成签名
+     * @param user
+     * @return
+     */
+    public static String sign(LoginUserDTO user){
+        StringRedisTemplate stringRedisTemplate = SpringContextHolder.getApplicationContext().getBean(StringRedisTemplate.class);
+
+        Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+        String token = JWT.create()
+                .withSubject(user.getAccount())
+                .withKeyId(user.getId())
+                .withIssuer(user.getParentId())
+                .withClaim("uid", user.getId())
+                .withClaim("account", user.getAccount())
+                //.withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))  //JWT 配置过期时间的正确姿势
+                .sign(algorithm);
+        //Redis缓存JWT
+        stringRedisTemplate.opsForValue().set(TOKEN_AUTH + user.getId(), token, EXPIRE_TIME, TimeUnit.SECONDS);
+        return token;
+    }
+
+    public static void verity(String token){
+        StringRedisTemplate stringRedisTemplate = SpringContextHolder.getApplicationContext().getBean(StringRedisTemplate.class);
+        try {
+            //1 . 根据token解密，解密出jwt-id , 先从redis中查找出redisToken，匹配是否相同
+            String redisToken = stringRedisTemplate.opsForValue().get(TOKEN_AUTH + getJwtIdByToken(token));
+            //2 . 得到算法相同的JWTVerifier
+            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            JWTVerifier verifier = JWT.require(algorithm)
+//                    .withClaim("uid", getJwtIdByToken(token))
+//                    .withClaim("account", getAccountByToken(token))
+                    //.acceptExpiresAt(System.currentTimeMillis() + EXPIRE_TIME)  //JWT 正确的配置续期姿势
+                    .build();
+            //3 . 验证token
+            DecodedJWT jwt = verifier.verify(redisToken);
+            //4 . Redis缓存JWT续期
+            stringRedisTemplate.opsForValue().set(TOKEN_AUTH + getJwtIdByToken(token), redisToken, EXPIRE_TIME, TimeUnit.SECONDS);
+        } catch (Exception e) { //捕捉到任何异常都视为校验失败
+            throw new TokenException("登录过期, 请重新登录");
+        }
+    }
+
+    public static String getJwtIdByToken(String token){
+        try{
+            return JWT.decode(token).getKeyId();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return "";
+    }
+
+    public static LoginUserDTO getJwtIdByToken(HttpServletRequest request){
+        String token = request.getHeader("token");
+        LoginUserDTO user = new LoginUserDTO();
+        try{
+            user.setToken(token);
+            user.setAccount(JWT.decode(token).getSubject());
+            user.setId(JWT.decode(token).getKeyId());
+            user.setParentId(JWT.decode(token).getIssuer());
+            return user;
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

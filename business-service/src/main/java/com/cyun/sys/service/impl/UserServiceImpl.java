@@ -17,6 +17,7 @@ import com.cyun.sys.service.UserService;
 import com.cyun.utils.bean.BeanRewriteUtils;
 import com.cyun.utils.misc.IdGenerator;
 import com.cyun.utils.spring.UUIDFactory;
+import com.cyun.utils.token.UserTokenUtils;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,10 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(param.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("用户名或者密码错误");
         }
+
+        //生成token
+        String token = UserTokenUtils.getToken(user);
+        user.setToken(token);
         // 修改最近登录时间
         sysUserMapper.updateLastTimeByUserId(user.getId());
         return user;

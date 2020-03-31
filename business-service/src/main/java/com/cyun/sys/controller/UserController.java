@@ -41,8 +41,8 @@ public class UserController {
     public JSONResult<String> login(@RequestBody LoginUserParam param) {
         log.info(JSON.toJSONString(param));
         LoginUserDTO userDTO = userService.login(param);
-        String token = UserTokenUtils.saveUserToken(userDTO, userDTO.getId());
-        return HttpUtil.writeJSONObject(token);
+        //String token = UserTokenUtils.saveUserToken(userDTO, userDTO.getId());
+        return HttpUtil.writeJSONObject(userDTO);
     }
 
     @ApiOperation("退出登陆")

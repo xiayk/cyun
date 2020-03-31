@@ -11,7 +11,8 @@ public class UserTokenUtils {
     }
 
     public static LoginUserDTO getLoginUserDTO() throws Exception {
-        return UserToken.getLoginUserDTO(RequestHolder.getRequest(), null);
+        //return UserToken.getLoginUserDTO(RequestHolder.getRequest(), null);
+        return UserToken.getJwtIdByToken(RequestHolder.getRequest());
     }
 
     public static String saveUserToken(LoginUserDTO user, String tokenId) {
@@ -28,6 +29,18 @@ public class UserTokenUtils {
 
     public static String getLoginUserId() throws Exception {
         return UserToken.getLoginUserDTO(RequestHolder.getRequest(), null).getId();
+    }
+
+    public static String getToken(LoginUserDTO user){
+        return UserToken.sign(user);
+    }
+
+    public static void verityToken(String token){
+        UserToken.verity(token);
+    }
+
+    public static String getUidByToken(String token){
+        return UserToken.getJwtIdByToken(token);
     }
 
     public static void removeUserToken(String tokenId) {

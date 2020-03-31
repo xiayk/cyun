@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: service-center
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://xiayk.com:3306/db_cyun?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: xweb
+    password: xweb.mysql
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-test-query: SELECT 1
+  redis:
+    host: xiayk.com
+    port: 6379
+    password: xiayk.redis
+    timeout: 10s
+    lettuce:
+      pool:
+        min-idle: 0
+        max-idle: 3000
+        max-active: 3000
+        max-wait: -1ms
+  mvc:
+    servlet:
+      load-on-startup: 1
+  aop:
+    proxy-target-class: true
+  swagger:
+    #TODO 修改swagger显示接口或者不显示接口，true显示，false不显示
+    enable: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+server:
+  port: 8087
+#  servlet:
+#    context-path: /sbq
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://127.0.0.1:8761/eureka/
+#    registry-fetch-interval-seconds: 5
+#  instance:
+#    lease-expiration-duration-in-seconds: 15
+#    lease-renewal-interval-in-seconds: 5
+#    prefer-ip-address: true
+#    instance-id: ${spring.application.name}:${random.int}
+mybatis:
+  mapper-locations: classpath:mapper/*
+  configuration:
+    log-prefix: com.cyun.
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#ribbon:
+#  ReadTimeout: 6000
+#  ConnectTimeout: 6000
+#file:
+#  local:
+#    path: /home/static/upload/files
+#    urlPrefix: http://203.195.129.191/files
+#  qcloud:
+#    accessKeyId: AKIDYw4yb1yF6kBPMs9tOK3qMHyS8YlKCYUR
+#    accessKeySecret: Wmp6X23qfJI1VyEIGiy9SYQekdGo9CDz
+#    bucketName: zjkj-1258899501
+#    region: ap-chengdu
+#    filePath: https://zjkj-1258899501.cos.ap-chengdu.myqcloud.com
+#  env: test
+#  defaultImage: http://203.195.129.191/files/timg.jpg
+#minProgram:
+#  appId: wx1cd8206018484614
+#  secret: 929e01f3e451c7fc5aa6f0e63f955604
+
+# 系统参数设置
+sys:
+  param:
+    test_token: sys_admin_test_token.1584760461693
+    default_menu_id: "'84959945e0ce44f399d56d59a0d35240','50e054bda83c4d46ac8a3e9dc94b170a','2c48be2373174c57aec7eaad9f1f36f9','df5bd377984d4e8d90cf5c75e170e7a7'"
+
