@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cyun.dao.GroupStoreMapper" >
-  <resultMap id="BaseResultMap" type="com.cyun.model.GroupStore" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
-    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
-    <result column="store_nick" property="storeNick" jdbcType="VARCHAR" />
-    <result column="store_status" property="storeStatus" jdbcType="INTEGER" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
-    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
-    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
-  </resultMap>
+<mapper namespace="com.cyun.dao.GroupStoreMapper">
+    <resultMap id="BaseResultMap" type="com.cyun.model.GroupStore">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="store_code" property="storeCode" jdbcType="VARCHAR"/>
+        <result column="store_name" property="storeName" jdbcType="VARCHAR"/>
+        <result column="store_nick" property="storeNick" jdbcType="VARCHAR"/>
+        <result column="store_status" property="storeStatus" jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="create_user_id" property="createUserId" jdbcType="VARCHAR"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectlist" resultMap="BaseResultMap" parameterType="com.cyun.param.StoreParam">
+        select
+        id,
+        store_code,
+        store_name,
+        store_nick,
+        store_status,
+        create_date,
+        create_user_id,
+        update_date,
+        update_user_id
+        from group_store
+        where 1=1 and store_status != 2
+        <include refid="selectCondition"></include>
+        ORDER BY create_date DESC
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectlistCount" resultType="java.lang.Integer" parameterType="com.cyun.param.StoreParam">
+        select
+        count(id)
+        from group_store
+        where 1=1 and store_status != 2
+        <include refid="selectCondition"></include>
+    </select>
+
+    <sql id="selectCondition">
+        <if test="storeName != null and storeName != ''">
+            and store_name like CONCAT('%',#{storeName},'%')
+        </if>
+        <if test="storeNick != null and storeNick != ''">
+            and store_nick like CONCAT('%',#{storeNick},'%')
+        </if>
+
+        <if test=" dateStart != null ">
+            and create_date between #{dateStart}
+            <if test="dateEnd != null">
+                and #{dateEnd}
+            </if>
+            <if test="dateEnd == null">
+                and now()
+            </if>
+        </if>
+    </sql>
 </mapper>

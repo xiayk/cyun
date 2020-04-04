@@ -107,9 +107,9 @@ public class UserServiceImpl implements UserService {
      */
     public void updateUser(SaveAndUpdateUserParam param, String userId) {
         // 判断用户名是否存在
-        if (sysUserMapper.countUserByAccountAndUserId(param.getAccount(), param.getId()) > 0) {
-            throw new IllegalArgumentException("账号已存在");
-        }
+//        if (sysUserMapper.countUserByAccountAndUserId(param.getAccount(), param.getId()) > 0) {
+//            throw new IllegalArgumentException("账号已存在");
+//        }
         // 编辑用户
         param.setUpdateDate(new Date());
         param.setUpdateUserId(userId);
